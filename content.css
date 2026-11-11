@@ -1,0 +1,97 @@
+/* Theme follows GitHub's own CSS variables (light, dark, dimmed, high contrast). */
+#prdc-bar {
+  --prdc-bg: var(--overlay-bgColor, var(--bgColor-default, #fff));
+  --prdc-border: var(--borderColor-default, #d0d7de);
+  --prdc-fg: var(--fgColor-muted, #59636e);
+  --prdc-fg-hover: var(--fgColor-default, #1f2328);
+  --prdc-hover-bg: var(--control-transparent-bgColor-hover, rgba(129, 139, 152, 0.12));
+  --prdc-ok: var(--fgColor-success, #1a7f37);
+  --prdc-err: var(--fgColor-danger, #d1242f);
+  --prdc-accent: var(--fgColor-accent, #0969da);
+
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 2147483000;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  background: var(--prdc-bg);
+  border: 1px solid var(--prdc-border);
+  border-radius: 8px;
+  box-shadow: var(--shadow-floating-small, 0 1px 3px rgba(31, 35, 40, 0.12), 0 8px 24px rgba(66, 74, 83, 0.12));
+  font: 12px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+}
+
+#prdc-bar .prdc-sep {
+  width: 1px;
+  height: 16px;
+  margin: 0 3px;
+  background: var(--prdc-border);
+}
+
+#prdc-bar .prdc-btn {
+  all: unset;
+  box-sizing: border-box;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  color: var(--prdc-fg);
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+}
+#prdc-bar .prdc-btn:hover { background: var(--prdc-hover-bg); color: var(--prdc-brand, var(--prdc-fg-hover)); }
+#prdc-bar .prdc-btn:focus-visible { outline: 2px solid var(--prdc-accent); outline-offset: -1px; }
+#prdc-bar .prdc-btn[aria-busy="true"] { cursor: progress; pointer-events: none; }
+#prdc-bar .prdc-btn[data-state="ok"] { color: var(--prdc-ok); }
+#prdc-bar .prdc-btn[data-state="error"] { color: var(--prdc-err); }
+#prdc-bar .prdc-btn svg { display: block; }
+
+/* busy spinner */
+#prdc-bar .prdc-btn[aria-busy="true"] svg { opacity: 0.25; }
+#prdc-bar .prdc-btn[aria-busy="true"]::before {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: prdc-spin 0.7s linear infinite;
+}
+@keyframes prdc-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  #prdc-bar .prdc-btn[aria-busy="true"]::before { animation-duration: 2s; }
+}
+
+/* tooltip */
+#prdc-bar .prdc-btn::after {
+  content: attr(data-tip);
+  position: absolute;
+  bottom: calc(100% + 10px);
+  right: 0;
+  max-width: 260px;
+  width: max-content;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: var(--tooltip-bgColor, #25292e);
+  color: var(--tooltip-fgColor, #fff);
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: normal;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(2px);
+  transition: opacity 0.12s, transform 0.12s;
+}
+#prdc-bar .prdc-btn:hover::after,
+#prdc-bar .prdc-btn:focus-visible::after,
+#prdc-bar .prdc-btn[data-state]::after {
+  opacity: 1;
+  transform: none;
+}
